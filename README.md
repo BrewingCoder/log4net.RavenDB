@@ -22,10 +22,10 @@ The two key properties are the URL and Database.
 
 To Use the appender simply add the appender-ref into the appropriate region.  In the example below we've added it to the `<root>` element:
 
-'''
+```XML
   <root>
       <level value="INFO" />
       <appender-ref ref="RavenDBAppender" />
       <appender-ref ref="ColoredConsoleAppender" />
     </root>
-'''    
+```    
