@@ -12,6 +12,8 @@
     <PackageTags>log4net, RavenDB</PackageTags>
     <PackageLicenseUrl>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BrewAndCode/log4net.RavenDB</PackageProjectUrl>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
