@@ -26,15 +26,7 @@ namespace log4net.RavenDB
         public string UserName { get; set; }
         public string ThreadName { get; set; }
 
-        public Log(){}
-
-        public Log(string id)
-        {
-            if(string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
-            Id = id;
-        }
-
-        public Log(LoggingEvent logEvent)
+       public Log(LoggingEvent logEvent)
         {
             if(logEvent==null) throw new ArgumentNullException(nameof(logEvent));
             LoggerName = logEvent.LoggerName;

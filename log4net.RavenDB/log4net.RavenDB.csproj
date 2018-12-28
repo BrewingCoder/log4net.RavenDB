@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>G. Scott Singleton</Authors>
+    <Company></Company>
+    <Description>Log4net Appender for RavenDB (4.0+)</Description>
+    <Copyright>2018 G. Scott Singleton</Copyright>
+    <RepositoryUrl>https://github.com/BrewAndCode/log4net.RavenDB</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>log4net, RavenDB</PackageTags>
+    <PackageLicenseUrl>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/BrewAndCode/log4net.RavenDB</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
