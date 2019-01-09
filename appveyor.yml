@@ -1,6 +1,6 @@
 version: 1.0.{build}
-skip_tags: true
 image: Visual Studio 2017
+
 before_build:
     - nuget restore
 build:
@@ -11,7 +11,7 @@ build:
 
 test:
     assemblies:
-            - **\*Tests.dll
+            - '**\Log4net.RavenDB.Tests.dll'
 
 on:
     branch: master
