@@ -12,5 +12,4 @@ build:
     verbosity: detailed
 test:
     assemblies:
-        only:
-            -log4net.RavenDb.Tests.dll
+            -'**\*Tests.dll'
