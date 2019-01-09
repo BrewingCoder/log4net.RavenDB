@@ -11,7 +11,7 @@ build:
 
 test:
     assemblies:
-            - '**\Log4net.RavenDB.Tests.dll'
+            - 'log**\Log4net.RavenDB.Tests.dll'
 
 on:
     branch: master
