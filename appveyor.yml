@@ -1,8 +1,15 @@
 version: 1.0.{build}
 image: Visual Studio 2017
 
+environment:
+    COVERALLS_REPO_TOKEN:
+        secure: epx2bxycth2I6Z8GjiineginAOHdLKJLm
+
 before_build:
     - nuget restore
+    - choco install opencover.portable
+    - choco install codecov
+
 build:
     project: log4net.RavenDB.sln
     publish_nuget: true             # package projects with .nuspec files and push to artifacts
@@ -13,3 +20,6 @@ test:
     assemblies:
             - 'log**\Log4net.RavenDB.Tests.dll'
 
+
+test_scripts:
+    -   OpenCover.Console.exe -register:user -target:" -targetargs:".\log4net.RavenDB.Tests\bin\debug\log4net.RavenDB.Tests.dll" -output ".\log4netRavenDb_coverage.xml"
