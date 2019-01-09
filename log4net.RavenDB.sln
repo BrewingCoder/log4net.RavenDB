@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.RavenDB.Tests", "lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log4net.RavenDB.LoadTest", "Log4net.RavenDB.LoadTest\Log4net.RavenDB.LoadTest.csproj", "{8CDFCB30-3E06-441D-913C-B4E0A4D259B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A3296618-307E-458F-B1BB-DDF0BB575828}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		COPYING.LESSER.md = COPYING.LESSER.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
