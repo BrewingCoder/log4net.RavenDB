@@ -1,9 +1,6 @@
 version: 4.7.{build}
 skip_tags: true
 image: Visual Studio 2017
-shallow_clone: true
-nuget:
-  disable_publish_on_pr: true
 build:
     project: log4net.RavenDB.sln
     publish_nuget: true             # package projects with .nuspec files and push to artifacts
