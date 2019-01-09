@@ -21,5 +21,5 @@ test:
             - 'log**\Log4net.RavenDB.Tests.dll'
 
 
-test_scripts:
+test_script:
     -   OpenCover.Console.exe -register:user -target:" -targetargs:".\log4net.RavenDB.Tests\bin\debug\log4net.RavenDB.Tests.dll" -output ".\log4netRavenDb_coverage.xml"
