@@ -16,18 +16,18 @@ namespace log4net.RavenDB.Tests
         private Mock<IDocumentStore> _mockIDocumentStore;
         private Mock<IDocumentSession> _mockIDocumentSession;
 
-        [TestMethod]
-        public void TestIntegrationWithLog4Net()
-        {
+        //[TestMethod]
+        //public void TestIntegrationWithLog4Net()
+        //{
 
-            XmlConfigurator.Configure();
-            var logger = LogManager.GetLogger(typeof(TestRavenDBAppender));
-            var appenders = logger.Logger.Repository.GetAppenders();
+        //    XmlConfigurator.Configure();
+        //    var logger = LogManager.GetLogger(typeof(TestRavenDBAppender));
+        //    var appenders = logger.Logger.Repository.GetAppenders();
 
-            Assert.AreEqual(1, appenders.Length);
-            Assert.AreEqual("RavenDBAppender", appenders[0].Name);
+        //    Assert.AreEqual(1, appenders.Length);
+        //    Assert.AreEqual("RavenDBAppender", appenders[0].Name);
 
-        }
+        //}
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
