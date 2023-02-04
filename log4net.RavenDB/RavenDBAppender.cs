@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
 using log4net.Appender;
 using log4net.Core;
 using Raven.Client.Documents;
@@ -16,7 +15,7 @@ namespace log4net.RavenDB
         public string Url { get; set; }
         public string Database { get; set; }
         private bool IsInitialized { get; set; }
-
+        
         [ExcludeFromCodeCoverage]
         public RavenDBAppender(){}
 
@@ -43,6 +42,7 @@ namespace log4net.RavenDB
             EnsureDocumentStore();
         }
 
+
         private void EnsureDocumentStore()
         {
             if (DocStore == null)
@@ -67,18 +67,18 @@ namespace log4net.RavenDB
             SendBuffer(events);
         }
 
-        protected override async void SendBuffer(LoggingEvent[] events)
+        protected override void SendBuffer(LoggingEvent[] events)
         {
             if (events == null || !events.Any()) return;
-                using (var session = DocStore.OpenSession())
+            using (var session = DocStore.OpenSession())
+            {
+                var logsEvents = events.Where(e => e != null).Select(e => new Log(e)).ToList();
+                foreach (var entry in logsEvents)
                 {
-                    var logsEvents = events.Where(e => e != null).Select(e => new Log(e)).ToList();
-                    foreach (var entry in logsEvents)
-                    {
-                        session.Store(entry);
-                        session.SaveChanges();
-                    }
-                };
+                    session.Store(entry);
+                    session.SaveChanges();
+                }
+            }
         }
     }
 }

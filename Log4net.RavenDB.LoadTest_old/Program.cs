@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Timers;
 using FizzWare.NBuilder;
 using log4net;
 using log4net.Config;
@@ -62,7 +61,7 @@ namespace Log4net.RavenDB.LoadTest
                 }
             }
             stopwatch.Stop();
-            Console.WriteLine($"Wrote 10,000 log events in {stopwatch.Elapsed.Seconds} seconds");
+            Console.WriteLine($"Wrote 10,000 log events in {stopwatch.Elapsed}");
             Console.WriteLine("Press any key...");
             Console.ReadKey();
 

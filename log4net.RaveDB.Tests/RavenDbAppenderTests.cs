@@ -1,61 +1,75 @@
-﻿using System;
-using FizzWare.NBuilder;
 using log4net.Config;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using log4net.Core;
+using log4net.RavenDB;
+using Microsoft.Extensions.Configuration;
 using Moq;
-using Nito.AsyncEx;
-using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using Raven.Client.Documents;
+using FizzWare.NBuilder;
+using log4net.Core;
+using Nito.AsyncEx;
 
-namespace log4net.RavenDB.Tests
+namespace log4net.RaveDB.Tests
 {
-    [TestClass]
-    public class TestRavenDBAppender
+    public class RavenDbAppenderTests
     {
-        private Mock<IDocumentStore> _mockIDocumentStore;
-        private Mock<IDocumentSession> _mockIDocumentSession;
+        private Lazy<string> _serverUrl = new();
+        private readonly Mock<IDocumentStore> _mockIDocumentStore;
+        private readonly Mock<IDocumentSession> _mockIDocumentSession;
 
-        [TestMethod]
-        public void TestIntegrationWithLog4Net()
-        {
-
-            XmlConfigurator.Configure();
-            var logger = LogManager.GetLogger(typeof(TestRavenDBAppender));
-            var appenders = logger.Logger.Repository.GetAppenders();
-
-            Assert.AreEqual(1, appenders.Length);
-            Assert.AreEqual("RavenDBAppender", appenders[0].Name);
-
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestLogThrowsExceptionOnNullEvent()
-        {
-            var myLog = new Log(null);
-        }
-
-        [TestInitialize]
-        public void Initialize()
+        public RavenDbAppenderTests()
         {
             _mockIDocumentStore = new Mock<IDocumentStore>();
             _mockIDocumentStore.SetupAllProperties();
-
             _mockIDocumentSession = new Mock<IDocumentSession>();
             _mockIDocumentSession.SetupAllProperties();
-
             _mockIDocumentStore.Setup(m => m.OpenSession()).Returns(_mockIDocumentSession.Object);
         }
 
-        [TestMethod]
+        protected string ServerUrl
+        {
+            get
+            {
+                if (!_serverUrl.IsValueCreated) {
+                    var configuration = new ConfigurationBuilder().AddUserSecrets<RavenDbAppenderTests>().Build();
+                    _serverUrl = new Lazy<string>(configuration["RavenDBServer"]);
+                }
+                return _serverUrl.Value;
+            }
+        }
+
+        
+
+        [Fact]
+        public void TestIntegrationWithLog4Net()
+        {
+            XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            var logger = LogManager.GetLogger(typeof(RavenDbAppenderTests));
+            var appenders = logger.Logger.Repository.GetAppenders();
+            
+            Assert.Single(appenders);
+            Assert.Equal("RavenDBAppender", appenders[0].Name);
+        }
+
+        [Fact]
+        public void TestLogThrowsExceptionOnNullEvent()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var myLog = new Log(null);
+                Assert.IsType<string>(myLog.Level);
+            });
+
+
+        }
+
+        [Fact]
         public void TestInstantiation()
         {
             var appender = new RavenDBAppender(_mockIDocumentStore.Object);
-            Assert.AreSame(_mockIDocumentStore.Object,appender.DocStore);
+            Assert.Same(_mockIDocumentStore.Object,appender.DocStore);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestActivateWithProperParameters()
         {
             var appender = new RavenDBAppender(_mockIDocumentStore.Object)
@@ -68,26 +82,31 @@ namespace log4net.RavenDB.Tests
             _mockIDocumentStore.Verify(m=>m.Initialize(),Times.AtLeastOnce);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "Database connection parameter 'Url' is not specified.")]
+        [Fact]
         public void TestActivateWithMissingUrl()
         {
             var appender = new RavenDBAppender(_mockIDocumentStore.Object)
             {
                 Database = "AppenderLogTest"
             };
-            appender.ActivateOptions();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                appender.ActivateOptions();
+            });
+            
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "Database name parameter 'Database' is not specified.")]
+        [Fact]
         public void TestActivateWithMissingDatabaseName()
         {
             var appender = new RavenDBAppender(_mockIDocumentStore.Object)
             {
                 Url = "http://localhost:8080"
             };
-            appender.ActivateOptions();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                appender.ActivateOptions();
+            });
         }
 
         private static LoggingEvent MakeLoggingEvent()
@@ -96,8 +115,8 @@ namespace log4net.RavenDB.Tests
             var results = new LoggingEvent(data);
             return results;
         }
-
-        [TestMethod]
+        
+        [Fact]
         public void TestSendBuffer()
         {
             var lEvent = Builder<LoggingEvent>.CreateNew()
@@ -113,6 +132,7 @@ namespace log4net.RavenDB.Tests
                 Database = "AppenderLogTest"
             };
 
+
             AsyncContext.Run(() =>
             {
                 appender.LogEvents(events);
@@ -124,10 +144,10 @@ namespace log4net.RavenDB.Tests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSendBufferWithZeroLenArray()
         {
-            var events = new LoggingEvent[0];
+            var events = Array.Empty<LoggingEvent>();
             var appender = new RavenDBAppender(_mockIDocumentStore.Object)
             {
                 Url = "http://localhost:8080",
@@ -144,7 +164,7 @@ namespace log4net.RavenDB.Tests
             _mockIDocumentSession.Verify(m => m.Dispose(), Times.Never);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSendBufferWithNullParam()
         {
             var appender = new RavenDBAppender(_mockIDocumentStore.Object)
@@ -162,7 +182,5 @@ namespace log4net.RavenDB.Tests
             _mockIDocumentSession.Verify(m => m.SaveChanges(), Times.Never);
             _mockIDocumentSession.Verify(m => m.Dispose(), Times.Never);
         }
-       
     }
 }
-
